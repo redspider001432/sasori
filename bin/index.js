@@ -91,7 +91,10 @@ yarg.command({
       console.log(chalk.green(`[INFO] Config file "${argv.config}" exists.`));
       const config = JSON.parse(fs.readFileSync(argv.config, 'utf-8'));
       if(argv.url){
+        const urlObj = new URL(argv.url);
+        const domainRegex = `https?://${urlObj.hostname}(?:/.*|)`;
         config.crawler.entryPoint = argv.url;
+        config.crawler.includeRegexes = [domainRegex];
       }
       const {error, value} = configModel.validate(config);
       if (error) {
